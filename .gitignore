@@ -1,0 +1,30 @@
+target/
+**/*.rs.bk
+.idea/
+.vscode/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+venv/
+.venv/
+.env
+
+# Test / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+
+# Build / dist
+build/
+dist/
+*.egg-info/
+
+# Misc
+.DS_Store
