@@ -301,30 +301,32 @@ def refresh_ulauncher():
     ulauncher_settings_path = Path(f"{os.environ['HOME']}/.config/ulauncher") / "settings.json"
     #print("Ulauncher settings path:", ulauncher_settings_path)
 
+    if ulauncher_settings_path.exists():
+        current_theme = None
+        with open(ulauncher_settings_path, 'r') as f:
+            for line in f:
+                if "theme-name" in line:
+                    current_theme = line.split(':')[1].strip().strip('",')
+                    #print(f"Current Ulauncher theme: {current_theme}")
+                    if current_theme != "KDE_theme":
+                        #print("Setting Ulauncher theme to KDE_theme")
+                        f.seek(0)
+                        settings_data = f.read()
+                        settings_data = re.sub(r'"theme-name"\s*:\s*".*?"', '"theme-name": "KDE_theme"', settings_data)
+                        with open(ulauncher_settings_path, 'w') as fw:
+                            fw.write(settings_data)
+                    break
+
     if subprocess.run(['pgrep', 'ulauncher'], capture_output=True).stdout:
         subprocess.run(['pkill', 'ulauncher'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if ulauncher_settings_path.exists():
-            current_theme = None
-            with open(ulauncher_settings_path, 'r') as f:
-                for line in f:
-                    if "theme-name" in line:
-                        current_theme = line.split(':')[1].strip().strip('",')
-                        #print(f"Current Ulauncher theme: {current_theme}")
-                        if current_theme != "KDE_theme":
-                            #print("Setting Ulauncher theme to KDE_theme")
-                            f.seek(0)
-                            settings_data = f.read()
-                            settings_data = re.sub(r'"theme-name"\s*:\s*".*?"', '"theme-name": "KDE_theme"', settings_data)
-                            with open(ulauncher_settings_path, 'w') as fw:
-                                fw.write(settings_data)
-                        break
-        
-        env = os.environ.copy()
-        env['GDK_BACKEND'] = 'x11'
-        subprocess.Popen(
-            ['ulauncher', '--hide-window', '--no-window-shadow'],
-            env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-        )
+
+    # Restart or open Ulauncher
+    env = os.environ.copy()
+    env['GDK_BACKEND'] = 'x11'
+    subprocess.Popen(
+        ['ulauncher', '--hide-window', '--no-window-shadow'],
+        env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
 
 def main():
     parser = argparse.ArgumentParser(description="Generate Ulauncher configuration based on the active KDE color scheme.")
