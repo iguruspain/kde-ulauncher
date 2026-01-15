@@ -90,7 +90,3 @@
 .prefs-btn:hover {
     background-color: @prefs_background;
 }
-
-.no-window-shadow {
-    margin: -20px;
-}
