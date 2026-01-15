@@ -265,7 +265,7 @@ def gen_ulauncher_config(palette, template_dir):
     with open(template_css_path, 'r') as f:
         template_css = f.read()
 
-    def hex_to_rgba(hex_color, alpha=0.8):
+    def hex_to_rgba(hex_color, alpha=1): # Default alpha to 0.8
         #print(f"Converting hex color {hex_color} to rgba with alpha {alpha}")
         r, g, b = hex_to_rgb(hex_color)
         return f'rgba({r}, {g}, {b}, {alpha})'
